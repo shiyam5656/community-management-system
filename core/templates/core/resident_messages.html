@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>My Messages to Admin</h2>
+<a href="{% url 'send_message' %}" class="btn btn-primary mb-3">+ New Message</a>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Sent Date</th>
+                        <th>Status</th>
+                        <th>Admin Reply</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr>
+                        <td><strong>{{ msg.subject }}</strong></td>
+                        <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            {% if msg.reply %}
+                                <span class="badge bg-success">Replied</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Awaiting reply</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if msg.reply %}
+                                {{ msg.reply|linebreaks }}
+                                <br><small class="text-muted">Replied on {{ msg.replied_at|date:"M d, Y H:i" }}</small>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center">You haven't sent any messages yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

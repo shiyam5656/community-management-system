@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Friend Requests</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Received</h4>
+        {% for req in received %}
+        <div class="card mb-2">
+            <div class="card-body">
+                {{ req.from_user.username }}
+                <a href="{% url 'respond_friend_request' req.id 'accept' %}" class="btn btn-sm btn-success">Accept</a>
+                <a href="{% url 'respond_friend_request' req.id 'reject' %}" class="btn btn-sm btn-danger">Reject</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No pending requests.</p>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <h4>Sent</h4>
+        {% for req in sent %}
+        <div class="card mb-2">
+            <div class="card-body">
+                {{ req.to_user.username }} - <span class="text-muted">Pending</span>
+            </div>
+        </div>
+        {% empty %}
+        <p>No sent requests.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

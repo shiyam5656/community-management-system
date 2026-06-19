@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-chart-line"></i> Dashboard Overview
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h3>${{ total_pending }}</h3>
+                        <p>Pending Fees</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>{{ properties|length }}</h3>
+                        <p>Occupied Units</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>0</h3>
+                        <p>Pending Fees ($)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <i class="fas fa-home"></i> Property List
+        {% if user.is_authenticated and user.is_staff %}
+        <div class="float-end">
+            <a href="/add-property/" class="btn btn-sm btn-light"><i class="fas fa-plus"></i> Add Property</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Unit</th>
+                        <th>Owner</th>
+                        <th>Monthly Fee</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property in properties %}
+                    <tr>
+                        <td><strong>{{ property.unit_number }}</strong></td>
+                        <td>{{ property.owner_name }}</td>
+                        <td>${{ property.monthly_fee }}</td>
+                        <td>
+                            {% if property.status == 'occupied' %}
+                            <span class="badge bg-success">Occupied</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Vacant</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No properties yet. Add some via admin.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

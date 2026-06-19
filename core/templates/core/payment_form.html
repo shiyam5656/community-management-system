@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-money-bill-wave"></i> Record Payment for {{ fee.property.unit_number }}
+            </div>
+            <div class="card-body">
+                <p><strong>Fee amount:</strong> ${{ fee.amount }}</p>
+                <p><strong>Due date:</strong> {{ fee.due_date }}</p>
+                <hr>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Submit Payment</button>
+                    <a href="/fees/" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

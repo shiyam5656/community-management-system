@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1 class="mb-4">My Resident Dashboard</h1>
+
+<!-- Profile and Property Card -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <i class="fas fa-user"></i> My Profile
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ request.user.get_full_name|default:request.user.username }}</p>
+                <p><strong>Email:</strong> {{ request.user.email }}</p>
+                <p><strong>Phone:</strong> {{ profile.phone|default:"Not provided" }}</p>
+                <p><strong>Move-in Date:</strong> {{ profile.move_in_date|date:"F j, Y"|default:"Not set" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-secondary text-white">
+                <i class="fas fa-home"></i> My Property
+            </div>
+            <div class="card-body">
+                {% if property %}
+                <p><strong>Unit:</strong> {{ property.unit_number }}</p>
+                <p><strong>Monthly Fee:</strong> ${{ property.monthly_fee }}</p>
+                <p><strong>Status:</strong> {{ property.get_status_display }}</p>
+                {% else %}
+                <p class="text-muted">No property assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fee Summary -->
+<div class="card mb-4">
+    <div class="card-header bg-warning">
+        <i class="fas fa-dollar-sign"></i> Fee Summary
+    </div>
+    <div class="card-body">
+        <h3 class="text-danger">Total Due: ${{ total_due }}</h3>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>Description</th><th>Amount</th><th>Due Date</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    {% for fee in fees %}
+                    <tr>
+                        <td>{{ fee.description|default:"Maintenance Fee" }}</td>
+                        <td>${{ fee.amount }}</td>
+                        <td>{{ fee.due_date }}</td>
+                        <td>{% if fee.status == 'paid' %}<span class="badge bg-success">Paid</span>{% else %}<span class="badge bg-danger">Unpaid</span>{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No fee records found.{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Announcements -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="fas fa-bullhorn"></i> Recent Announcements
+    </div>
+    <div class="card-body">
+        {% for ann in announcements %}
+        <div class="border-bottom pb-2 mb-2">
+            <strong>{{ ann.title }}</strong> <span class="text-muted small">({{ ann.created_at|date:"M d, Y" }})</span>
+            <p class="mb-1">{{ ann.content|truncatewords:20 }}</p>
+            {% if ann.is_emergency %}<span class="badge bg-danger">Emergency</span>{% endif %}
+        </div>
+        {% empty %}
+        <p>No announcements.</p>
+        {% endfor %}
+        <a href="{% url 'announcement_list' %}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+    </div>
+</div>
+
+<!-- New: Link to start a conversation with admin (replaces old contact form) -->
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <i class="fas fa-comments"></i> Need Help?
+    </div>
+    <div class="card-body text-center">
+        <p>If you have any questions or issues, start a conversation with the admin.</p>
+        <a href="{% url 'start_conversation' %}" class="btn btn-primary">Start New Conversation</a>
+    </div>
+</div>
+{% endblock %}

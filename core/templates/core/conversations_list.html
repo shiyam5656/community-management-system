@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>My Conversations</h2>
+<a href="{% url 'start_conversation' %}" class="btn btn-primary mb-3">+ New Conversation</a>
+<div class="list-group">
+    {% for convo in conversations %}
+    <a href="{% url 'conversation_detail' convo.id %}" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between">
+            <strong>{{ convo.subject }}</strong>
+            <small>{{ convo.updated_at|timesince }} ago</small>
+        </div>
+        <small>With: {% if convo.resident == user %}Admin{% else %}{{ convo.resident.username }}{% endif %}</small>
+        <div>{% if convo.is_closed %}<span class="badge bg-secondary">Closed</span>{% endif %}</div>
+    </a>
+    {% empty %}
+    <p>No conversations yet. Start one!</p>
+    {% endfor %}
+</div>
+{% endblock %}

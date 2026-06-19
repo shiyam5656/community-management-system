@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Resident Messages</h2>
+<table class="table">
+    <thead>
+        <tr><th>From</th><th>Subject</th><th>Date</th><th>Status</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        {% for msg in messages %}
+        <tr>
+            <td>{{ msg.sender.username }}</td>
+            <td>{{ msg.subject }}</td>
+            <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+            <td>{% if msg.reply %}Replied{% else %}Awaiting reply{% endif %}</td>
+            <td><a href="{% url 'reply_message' msg.id %}" class="btn btn-sm btn-primary">Reply</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

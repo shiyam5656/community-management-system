@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>My Friends</h2>
+
+{% if friends %}
+<div class="row">
+    {% for friend in friends %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    {% if friend.profile.profile_picture %}
+                        <img src="{{ friend.profile.profile_picture.url }}" width="50" height="50" class="rounded-circle">
+                    {% else %}
+                        <i class="fas fa-user-circle fa-3x"></i>
+                    {% endif %}
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h5 class="mb-1">{{ friend.username }}</h5>
+                    <small class="text-muted">{{ friend.get_full_name }}</small>
+                </div>
+                <div>
+                    <a href="{% url 'private_chat' friend.username %}" class="btn btn-sm btn-primary">Message</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">You have no friends yet.</div>
+{% endif %}
+
+<h3 class="mt-4">Suggestions</h3>
+<div class="row">
+    {% for user in suggestions %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-user-circle fa-3x"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h5 class="mb-1">{{ user.username }}</h5>
+                    <small class="text-muted">{{ user.get_full_name }}</small>
+                </div>
+                <div>
+                    <a href="{% url 'send_friend_request' user.username %}" class="btn btn-sm btn-success">Add Friend</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-muted">No more users to suggest. You are friends with everyone!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="{% url 'search_users' %}" class="btn btn-outline-primary mt-3">Find New Friends</a>
+{% endblock %}

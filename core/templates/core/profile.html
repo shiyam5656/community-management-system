@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Profile</div>
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" class="rounded-circle mb-3" width="150">
+                {% else %}
+                <i class="fas fa-user-circle fa-5x mb-3"></i>
+                {% endif %}
+                <h3>{{ target_user.username }}</h3>
+                <p>{{ profile.bio|default:"No bio yet." }}</p>
+                <p><strong>Joined:</strong> {{ profile.joined_date|date:"F j, Y" }}</p>
+                {% if target_user == user %}
+                <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Edit Profile</a>
+                {% else %}
+                    {% if is_friend %}
+                    <a href="{% url 'private_chat' target_user.username %}" class="btn btn-primary">Message</a>
+                    {% elif friend_request_sent %}
+                    <button class="btn btn-secondary" disabled>Request Sent</button>
+                    {% elif friend_request_received %}
+                    <a href="{% url 'friend_requests' %}" class="btn btn-warning">Respond to Request</a>
+                    {% else %}
+                    <a href="{% url 'send_friend_request' target_user.username %}" class="btn btn-success">Add Friend</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Property Information</div>
+            <div class="card-body">
+                {% if target_user.resident_profile.property %}
+                <p><strong>Unit:</strong> {{ target_user.resident_profile.property.unit_number }}</p>
+                <p><strong>Parking Spot:</strong> 
+                    {% with spot=target_user.resident_profile.property.parking_spots.first %}
+                        {% if spot %}{{ spot.spot_number }}{% else %}Not assigned{% endif %}
+                    {% endwith %}
+                </p>
+                {% else %}
+                <p>No property assigned.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

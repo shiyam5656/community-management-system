@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Parking Spots</h2>
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>Spot</th><th>Assigned To</th><th>Covered</th><th>Reserved</th></tr>
+                </thead>
+                <tbody>
+                    {% for spot in spots %}
+                    <tr>
+                        <td><strong>{{ spot.spot_number }}</strong></td>
+                        <td>{% if spot.property %}{{ spot.property.unit_number }} - {{ spot.property.owner_name }}{% else %}Available{% endif %}</td>
+                        <td>{% if spot.is_covered %}✅{% else %}❌{% endif %}</td>
+                        <td>{% if spot.is_reserved %}✅{% else %}❌{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

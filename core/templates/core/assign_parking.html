@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-parking"></i> Assign Parking Spot: {{ spot.spot_number }}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Assign to Property</label>
+                        <select name="property" class="form-select">
+                            <option value="">-- Available (Unassigned) --</option>
+                            {% for prop in properties %}
+                            <option value="{{ prop.id }}" {% if spot.property and spot.property.id == prop.id %}selected{% endif %}>
+                                {{ prop.unit_number }} - {{ prop.owner_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Save Assignment</button>
+                    <a href="{% url 'parking_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
